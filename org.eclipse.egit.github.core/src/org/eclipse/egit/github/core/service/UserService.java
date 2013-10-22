@@ -10,10 +10,13 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_EMAILS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FOLLOWERS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FOLLOWING;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_KEYS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LEGACY;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
@@ -22,9 +25,12 @@ import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
+import org.eclipse.egit.github.core.IResourceProvider;
 import org.eclipse.egit.github.core.Key;
+import org.eclipse.egit.github.core.SearchUser;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
@@ -44,6 +50,17 @@ import org.eclipse.egit.github.core.client.PagedRequest;
  *      documentation</a>
  */
 public class UserService extends GitHubService {
+	private static class UserContainer implements IResourceProvider<SearchUser> {
+
+		private List<SearchUser> users;
+
+		/**
+		 * @see org.eclipse.egit.github.core.IResourceProvider#getResources()
+		 */
+		public List<SearchUser> getResources() {
+			return users;
+		}
+	}
 
 	/**
 	 * Create user service
@@ -506,5 +523,45 @@ public class UserService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_USER + SEGMENT_KEYS);
 		uri.append('/').append(id);
 		client.delete(uri.toString());
+	}
+
+	/**
+	 * Search for users matching query.
+	 *
+	 * @param query
+	 * @return list of users
+	 * @throws IOException
+	 */
+	public List<SearchUser> searchUsers(final String query) throws IOException {
+		return searchUsers(query, -1);
+	}
+
+	/**
+	 * Search for users matching query.
+	 *
+	 * @param query
+	 * @param startPage
+	 * @return list of users
+	 * @throws IOException
+	 */
+	public List<SearchUser> searchUsers(final String query, final int startPage)
+			throws IOException {
+		if (query == null)
+			throw new IllegalArgumentException("Query cannot be null"); //$NON-NLS-1$
+		if (query.length() == 0)
+			throw new IllegalArgumentException("Query cannot be empty"); //$NON-NLS-1$
+
+		StringBuilder uri = new StringBuilder(SEGMENT_LEGACY + SEGMENT_USER
+				+ SEGMENT_SEARCH);
+		final String encodedQuery = URLEncoder.encode(query, CHARSET_UTF8)
+				.replace("+", "%20") //$NON-NLS-1$ //$NON-NLS-2$
+				.replace(".", "%2E"); //$NON-NLS-1$ //$NON-NLS-2$
+		uri.append('/').append(encodedQuery);
+
+		PagedRequest<SearchUser> request = createPagedRequest();
+
+		request.setUri(uri);
+		request.setType(UserContainer.class);
+		return getAll(request);
 	}
 }
