@@ -16,6 +16,7 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS
 
 import com.google.gson.reflect.TypeToken;
 
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -82,6 +83,26 @@ public class ContentsService extends GitHubService {
 			request.setParams(Collections.singletonMap("ref", ref));
 		request.setType(RepositoryContents.class);
 		return (RepositoryContents) client.get(request).getBody();
+	}
+
+	/**
+	 * Get stream of HTML for the repository's README
+	 *
+	 * @param repository
+	 * @return stream of HTML
+	 * @throws IOException
+	 */
+	public InputStream getReadmeStream(IRepositoryIdProvider repository)
+			throws IOException {
+		String id = getId(repository);
+
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_README);
+
+		GitHubRequest request = createRequest();
+		request.setUri(uri);
+		return client.getStream(request);
 	}
 
 	/**

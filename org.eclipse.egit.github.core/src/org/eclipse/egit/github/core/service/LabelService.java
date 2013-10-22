@@ -274,16 +274,16 @@ public class LabelService extends GitHubService {
 	 * Edit the given label in the given repository
 	 *
 	 * @param repository
+	 * @param name
 	 * @param label
 	 * @return edited label
 	 * @throws IOException
 	 */
-	public Label editLabel(IRepositoryIdProvider repository, Label label)
+	public Label editLabel(IRepositoryIdProvider repository, String name, Label label)
 			throws IOException {
 		String repoId = getId(repository);
 		if (label == null)
 			throw new IllegalArgumentException("Label cannot be null"); //$NON-NLS-1$
-		String name = label.getName();
 		if (name == null)
 			throw new IllegalArgumentException("Label name cannot be null"); //$NON-NLS-1$
 		if (name.length() == 0)

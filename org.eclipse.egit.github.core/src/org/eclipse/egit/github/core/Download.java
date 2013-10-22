@@ -11,6 +11,9 @@
 package org.eclipse.egit.github.core;
 
 import java.io.Serializable;
+import java.util.Date;
+
+import org.eclipse.egit.github.core.util.DateUtils;
 
 /**
  * Download model class
@@ -35,6 +38,8 @@ public class Download implements Serializable {
 	private String name;
 
 	private String url;
+
+	private Date createdAt;
 
 	/**
 	 * @return downloadCount
@@ -161,6 +166,22 @@ public class Download implements Serializable {
 	 */
 	public Download setUrl(String url) {
 		this.url = url;
+		return this;
+	}
+
+	/**
+	 * @return creation date
+	 */
+	public Date getCreatedAt() {
+		return DateUtils.clone(createdAt);
+	}
+
+	/**
+	 * @param createdAt
+	 * @return this download
+	 */
+	public Download setCreatedAt(Date createdAt) {
+		this.createdAt = DateUtils.clone(createdAt);
 		return this;
 	}
 }

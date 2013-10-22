@@ -270,6 +270,19 @@ public class RepositoryService extends GitHubService {
 	}
 
 	/**
+	 * Get repositories for the given user
+	 *
+	 * @param user
+	 * @param filterData
+	 * @return list of repositories
+	 * @throws IOException
+	 */
+	public List<Repository> getRepositories(String user,
+			Map<String, String> filterData) throws IOException {
+		return getAll(pageRepositories(user, filterData));
+	}
+
+	/**
 	 * Page repositories for given user
 	 *
 	 * @param user
@@ -277,6 +290,18 @@ public class RepositoryService extends GitHubService {
 	 */
 	public PageIterator<Repository> pageRepositories(String user) {
 		return pageRepositories(user, PAGE_SIZE);
+	}
+
+	/**
+	 * Page repositories for given user
+	 *
+	 * @param user
+	 * @param filterData
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageRepositories(String user,
+			Map<String, String> filterData) {
+		return pageRepositories(user, filterData, PAGE_SIZE);
 	}
 
 	/**
@@ -294,12 +319,39 @@ public class RepositoryService extends GitHubService {
 	 * Page repositories for given user
 	 *
 	 * @param user
+	 * @param filterData
+	 * @param size
+	 * @return iterator over pages of repositories
+	 */
+	public PageIterator<Repository> pageRepositories(String user,
+			Map<String, String> filterData, int size) {
+		return pageRepositories(user, filterData, PAGE_FIRST, size);
+	}
+
+	/**
+	 * Page repositories for given user
+	 *
+	 * @param user
 	 * @param start
 	 * @param size
 	 * @return iterator over repository page
 	 */
 	public PageIterator<Repository> pageRepositories(String user, int start,
 			int size) {
+		return pageRepositories(user, null, start, size);
+	}
+
+	/**
+	 * Page repositories for given user
+	 *
+	 * @param user
+	 * @param filterData
+	 * @param start
+	 * @param size
+	 * @return iterator over repository page
+	 */
+	public PageIterator<Repository> pageRepositories(String user,
+			Map<String, String> filterData, int start, int size) {
 		if (user == null)
 			throw new IllegalArgumentException("User cannot be null"); //$NON-NLS-1$
 		if (user.length() == 0)
