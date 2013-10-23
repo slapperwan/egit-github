@@ -54,7 +54,7 @@ public class StarService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_STARGAZERS);
 		request.setUri(uri);
-		request.setType(new TypeToken() {
+		request.setType(new TypeToken<List<User>>() {
 		}.getType());
 		return request;
 	}
@@ -129,7 +129,7 @@ public class StarService extends GitHubService {
 		uri.append('/').append(user);
 		uri.append(SEGMENT_STARRED);
 		request.setUri(uri);
-		request.setType(new TypeToken() {
+		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
 		return request;
 	}
@@ -144,7 +144,7 @@ public class StarService extends GitHubService {
 	protected PagedRequest<Repository> createStarredRequest(int start, int size) {
 		PagedRequest request = createPagedRequest(start, size);
 		request.setUri(SEGMENT_USER + SEGMENT_STARRED);
-		request.setType(new TypeToken() {
+		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
 		return request;
 	}
