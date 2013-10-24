@@ -727,18 +727,24 @@ public class GitHubClient {
 	 */
 	public GitHubResponse get(GitHubRequest request) throws IOException {
 		HttpURLConnection httpRequest = createGet(request.generateUri());
-		String accept = request.getResponseContentType();
-		if (accept != null)
-			httpRequest.setRequestProperty(HEADER_ACCEPT, accept);
-		final int code = httpRequest.getResponseCode();
-		updateRateLimits(httpRequest);
-		if (isOk(code))
-			return new GitHubResponse(httpRequest, getBody(request,
-					getStream(httpRequest)));
-		if (isEmpty(code))
-			return new GitHubResponse(httpRequest, null);
-		throw createException(getStream(httpRequest), code,
-				httpRequest.getResponseMessage());
+		try {
+			String accept = request.getResponseContentType();
+			if (accept != null)
+				httpRequest.setRequestProperty(HEADER_ACCEPT, accept);
+			final int code = httpRequest.getResponseCode();
+			updateRateLimits(httpRequest);
+			if (isOk(code))
+				return new GitHubResponse(httpRequest, getBody(request,
+						getStream(httpRequest)));
+			if (isEmpty(code))
+				return new GitHubResponse(httpRequest, null);
+			throw createException(getStream(httpRequest), code,
+					httpRequest.getResponseMessage());
+		} finally {
+			if (httpRequest != null) {
+				httpRequest.disconnect();
+			}
+		}
 	}
 
 	/**
@@ -754,7 +760,13 @@ public class GitHubClient {
 	public <V> V post(final String uri, final Object params, final Type type)
 			throws IOException {
 		HttpURLConnection request = createPost(uri);
-		return sendJson(request, params, type);
+		try {
+			return sendJson(request, params, type);
+		} finally {
+			if (request != null) {
+				request.disconnect();
+			}
+		}
 	}
 
 	/**
@@ -770,7 +782,13 @@ public class GitHubClient {
 	public <V> V put(final String uri, final Object params, final Type type)
 			throws IOException {
 		HttpURLConnection request = createPut(uri);
-		return sendJson(request, params, type);
+		try {
+			return sendJson(request, params, type);
+		} finally {
+			if (request != null) {
+				request.disconnect();
+			}
+		}
 	}
 
 	/**
@@ -784,12 +802,18 @@ public class GitHubClient {
 	public void delete(final String uri, final Object params)
 			throws IOException {
 		HttpURLConnection request = createDelete(uri);
-		if (params != null)
-			sendParams(request, params);
-		final int code = request.getResponseCode();
-		updateRateLimits(request);
-		if (!isEmpty(code))
-			throw new RequestException(parseError(getStream(request)), code);
+		try {
+			if (params != null)
+				sendParams(request, params);
+			final int code = request.getResponseCode();
+			updateRateLimits(request);
+			if (!isEmpty(code))
+				throw new RequestException(parseError(getStream(request)), code);
+		} finally {
+			if (request != null) {
+				request.disconnect();
+			}
+		}
 	}
 
 	/**
