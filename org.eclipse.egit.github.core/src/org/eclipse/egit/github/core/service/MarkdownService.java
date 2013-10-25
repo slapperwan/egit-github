@@ -57,46 +57,6 @@ public class MarkdownService extends GitHubService {
 		super(client);
 	}
 
-	private String readStream(final InputStream stream) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				stream, CHARSET_UTF8));
-		try {
-			StringBuilder output = new StringBuilder();
-			char[] buffer = new char[8192];
-			int read;
-			while ((read = reader.read(buffer)) != -1)
-				output.append(buffer, 0, read);
-			return output.toString();
-		} finally {
-			try {
-				reader.close();
-			} catch (IOException ignored) {
-				// Ignored
-			}
-		}
-	}
-
-	/**
-	 * Get stream of HTML for given Markdown text scoped to given repository
-	 * context
-	 *
-	 * @param repo
-	 * @param text
-	 * @return stream of HTML
-	 * @throws IOException
-	 */
-	public InputStream getRepositoryStream(final IRepositoryIdProvider repo,
-			final String text) throws IOException {
-		String context = getId(repo);
-
-		Map<String, String> params = new HashMap<String, String>(3, 1);
-		params.put("context", context);
-		params.put("text", text);
-		params.put("mode", MODE_GFM);
-
-		return client.postStream(SEGMENT_MARKDOWN, params);
-	}
-
 	/**
 	 * Get HTML for given Markdown text scoped to given repository context
 	 *
@@ -107,27 +67,14 @@ public class MarkdownService extends GitHubService {
 	 */
 	public String getRepositoryHtml(final IRepositoryIdProvider repo,
 			final String text) throws IOException {
-		return readStream(getRepositoryStream(repo, text));
-	}
+		String context = getId(repo);
 
-	/**
-	 * Get stream of HTML for given Markdown text
-	 * <p>
-	 * Use {@link #getRepositoryStream(IRepositoryIdProvider, String)} if you
-	 * want the Markdown scoped to a specific repository.
-	 *
-	 * @param text
-	 * @param mode
-	 * @return stream of HTML
-	 * @throws IOException
-	 */
-	public InputStream getStream(final String text, final String mode)
-			throws IOException {
-		Map<String, String> params = new HashMap<String, String>(2, 1);
+		Map<String, String> params = new HashMap<String, String>(3, 1);
+		params.put("context", context);
 		params.put("text", text);
-		params.put("mode", mode);
+		params.put("mode", MODE_GFM);
 
-		return client.postStream(SEGMENT_MARKDOWN, params);
+		return client.postStreamContents(SEGMENT_MARKDOWN, params);
 	}
 
 	/**
@@ -143,6 +90,10 @@ public class MarkdownService extends GitHubService {
 	 */
 	public String getHtml(final String text, final String mode)
 			throws IOException {
-		return readStream(getStream(text, mode));
+		Map<String, String> params = new HashMap<String, String>(2, 1);
+		params.put("text", text);
+		params.put("mode", mode);
+
+		return client.postStreamContents(SEGMENT_MARKDOWN, params);
 	}
 }

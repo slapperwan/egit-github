@@ -86,13 +86,13 @@ public class ContentsService extends GitHubService {
 	}
 
 	/**
-	 * Get stream of HTML for the repository's README
+	 * Get HTML for the repository's README
 	 *
 	 * @param repository
-	 * @return stream of HTML
+	 * @return HTML
 	 * @throws IOException
 	 */
-	public InputStream getReadmeStream(IRepositoryIdProvider repository)
+	public String getReadmeHtml(IRepositoryIdProvider repository)
 			throws IOException {
 		String id = getId(repository);
 
@@ -102,7 +102,7 @@ public class ContentsService extends GitHubService {
 
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
-		return client.getStream(request);
+		return client.getStreamContents(request);
 	}
 
 	/**

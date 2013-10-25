@@ -644,6 +644,25 @@ public class GitHubClient {
 				request.getResponseMessage());
 	}
 
+	private String readStream(final InputStream stream) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				stream, CHARSET_UTF8));
+		try {
+			StringBuilder output = new StringBuilder();
+			char[] buffer = new char[8192];
+			int read;
+			while ((read = reader.read(buffer)) != -1)
+				output.append(buffer, 0, read);
+			return output.toString();
+		} finally {
+			try {
+				reader.close();
+			} catch (IOException ignored) {
+				// Ignored
+			}
+		}
+	}
+
 	/**
 	 * Create full URI from path
 	 *
@@ -655,32 +674,39 @@ public class GitHubClient {
 	}
 
 	/**
-	 * Get response stream from GET to URI. It is the responsibility of the
-	 * calling method to close the returned stream.
+	 * Get response stream contents from GET to URI.
 	 *
 	 * @param request
-	 * @return stream
+	 * @return contents
 	 * @throws IOException
 	 */
-	public InputStream getStream(final GitHubRequest request)
+	public String getStreamContents(final GitHubRequest request)
 			throws IOException {
-		return getResponseStream(createGet(request.generateUri()));
+		HttpURLConnection connection = createGet(request.generateUri());
+		try {
+			return readStream(getResponseStream(connection));
+		} finally {
+			connection.disconnect();
+		}
 	}
 
 	/**
-	 * Get response stream from POST to URI. It is the responsibility of the
-	 * calling method to close the returned stream.
+	 * Get response stream contents from POST to URI.
 	 *
 	 * @param uri
 	 * @param params
-	 * @return stream
+	 * @return contents
 	 * @throws IOException
 	 */
-	public InputStream postStream(final String uri, final Object params)
+	public String postStreamContents(final String uri, final Object params)
 			throws IOException {
 		HttpURLConnection connection = createPost(uri);
-		sendParams(connection, params);
-		return getResponseStream(connection);
+		try {
+			sendParams(connection, params);
+			return readStream(getResponseStream(connection));
+		} finally {
+			connection.disconnect();
+		}
 	}
 
 	/**
