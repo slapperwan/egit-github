@@ -169,7 +169,7 @@ public class StarService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageStarred(String user) throws IOException {
+	public PageIterator<Repository> pageStarred(String user) {
 		return pageStarred(user, PAGE_SIZE);
 	}
 
@@ -181,8 +181,7 @@ public class StarService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageStarred(String user, int size)
-			throws IOException {
+	public PageIterator<Repository> pageStarred(String user, int size) {
 		return pageStarred(user, PAGE_FIRST, size);
 	}
 
@@ -195,8 +194,7 @@ public class StarService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageStarred(String user, int start, int size)
-			throws IOException {
+	public PageIterator<Repository> pageStarred(String user, int start, int size) {
 		PagedRequest request = createStarredRequest(user, start, size);
 		return createPageIterator(request);
 	}
@@ -219,7 +217,7 @@ public class StarService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageStarred() throws IOException {
+	public PageIterator<Repository> pageStarred() {
 		return pageStarred(PAGE_SIZE);
 	}
 
@@ -230,7 +228,7 @@ public class StarService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageStarred(int size) throws IOException {
+	public PageIterator<Repository> pageStarred(int size) {
 		return pageStarred(PAGE_FIRST, size);
 	}
 
@@ -242,8 +240,7 @@ public class StarService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageStarred(int start, int size)
-			throws IOException {
+	public PageIterator<Repository> pageStarred(int start, int size) {
 		PagedRequest request = createStarredRequest(start, size);
 		return createPageIterator(request);
 	}

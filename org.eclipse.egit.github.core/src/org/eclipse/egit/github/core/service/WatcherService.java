@@ -198,8 +198,7 @@ public class WatcherService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageWatched(String user, int size)
-			throws IOException {
+	public PageIterator<Repository> pageWatched(String user, int size) {
 		return pageWatched(user, PAGE_FIRST, size);
 	}
 
@@ -212,8 +211,7 @@ public class WatcherService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageWatched(String user, int start, int size)
-			throws IOException {
+	public PageIterator<Repository> pageWatched(String user, int start, int size) {
 		PagedRequest<Repository> request = createWatchedRequest(user, start,
 				size);
 		return createPageIterator(request);
@@ -237,7 +235,7 @@ public class WatcherService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageWatched() throws IOException {
+	public PageIterator<Repository> pageWatched() {
 		return pageWatched(PAGE_SIZE);
 	}
 
@@ -248,7 +246,7 @@ public class WatcherService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageWatched(int size) throws IOException {
+	public PageIterator<Repository> pageWatched(int size) {
 		return pageWatched(PAGE_FIRST, size);
 	}
 
@@ -260,8 +258,7 @@ public class WatcherService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageWatched(int start, int size)
-			throws IOException {
+	public PageIterator<Repository> pageWatched(int start, int size) {
 		PagedRequest<Repository> request = createWatchedRequest(start, size);
 		return createPageIterator(request);
 	}
