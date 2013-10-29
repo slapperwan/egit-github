@@ -186,7 +186,7 @@ public class WatcherService extends GitHubService {
 	 * @return page iterator
 	 * @throws IOException
 	 */
-	public PageIterator<Repository> pageWatched(String user) throws IOException {
+	public PageIterator<Repository> pageWatched(String user) {
 		return pageWatched(user, PAGE_SIZE);
 	}
 
