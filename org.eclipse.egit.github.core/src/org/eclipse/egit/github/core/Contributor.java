@@ -29,6 +29,8 @@ public class Contributor implements Serializable {
 
 	private int id;
 
+	private String gravatarId;
+
 	private String avatarUrl;
 
 	private String login;
@@ -68,6 +70,22 @@ public class Contributor implements Serializable {
 	 */
 	public Contributor setId(int id) {
 		this.id = id;
+		return this;
+	}
+
+	/**
+	 * @return gravatarId
+	 */
+	public String getGravatarId() {
+		return gravatarId;
+	}
+
+	/**
+	 * @param gravatarId
+	 * @return this contributor
+	 */
+	public Contributor setGravatarId(String gravatarId) {
+		this.gravatarId = gravatarId;
 		return this;
 	}
 
