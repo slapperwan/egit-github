@@ -12,13 +12,13 @@ package org.eclipse.egit.github.core.service;
 
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_LANGUAGE;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_QUERY;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_START_PAGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_BRANCHES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_CONTRIBUTORS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_HOOKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LANGUAGES;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LEGACY;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOSITORIES;
@@ -33,7 +33,6 @@ import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +47,6 @@ import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryHook;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.RepositoryTag;
-import org.eclipse.egit.github.core.SearchRepository;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.PageIterator;
@@ -110,15 +108,15 @@ public class RepositoryService extends GitHubService {
 	public static final String TYPE_ALL = "all"; //$NON-NLS-1$
 
 	private static class RepositoryContainer implements
-			IResourceProvider<SearchRepository> {
+			IResourceProvider<Repository> {
 
-		private List<SearchRepository> repositories;
+		private List<Repository> items;
 
 		/**
 		 * @see org.eclipse.egit.github.core.IResourceProvider#getResources()
 		 */
-		public List<SearchRepository> getResources() {
-			return repositories;
+		public List<Repository> getResources() {
+			return items;
 		}
 	}
 
@@ -486,7 +484,7 @@ public class RepositoryService extends GitHubService {
 	 * @return list of repositories
 	 * @throws IOException
 	 */
-	public List<SearchRepository> searchRepositories(final String query)
+	public List<Repository> searchRepositories(final String query)
 			throws IOException {
 		return searchRepositories(query, -1);
 	}
@@ -499,58 +497,23 @@ public class RepositoryService extends GitHubService {
 	 * @return list of repositories
 	 * @throws IOException
 	 */
-	public List<SearchRepository> searchRepositories(final String query,
+	public List<Repository> searchRepositories(final String query,
 			final int startPage) throws IOException {
-		return searchRepositories(query, null, startPage);
-	}
-
-	/**
-	 * Search for repositories matching language and query.
-	 *
-	 * @param query
-	 * @param language
-	 * @return list of repositories
-	 * @throws IOException
-	 */
-	public List<SearchRepository> searchRepositories(final String query,
-			final String language) throws IOException {
-		return searchRepositories(query, language, -1);
-	}
-
-	/**
-	 * Search for repositories matching language and query.
-	 *
-	 * @param query
-	 * @param language
-	 * @param startPage
-	 * @return list of repositories
-	 * @throws IOException
-	 */
-	public List<SearchRepository> searchRepositories(final String query,
-			final String language, final int startPage) throws IOException {
 		if (query == null)
 			throw new IllegalArgumentException("Query cannot be null"); //$NON-NLS-1$
 		if (query.length() == 0)
 			throw new IllegalArgumentException("Query cannot be empty"); //$NON-NLS-1$
 
-		StringBuilder uri = new StringBuilder(SEGMENT_LEGACY + SEGMENT_REPOS
-				+ SEGMENT_SEARCH);
-		final String encodedQuery = URLEncoder.encode(query, CHARSET_UTF8)
-				.replace("+", "%20") //$NON-NLS-1$ //$NON-NLS-2$
-				.replace(".", "%2E"); //$NON-NLS-1$ //$NON-NLS-2$
-		uri.append('/').append(encodedQuery);
-
-		PagedRequest<SearchRepository> request = createPagedRequest();
+		PagedRequest<Repository> request = createPagedRequest();
 
 		Map<String, String> params = new HashMap<String, String>(2, 1);
-		if (language != null && language.length() > 0)
-			params.put(PARAM_LANGUAGE, language);
+		params.put(PARAM_QUERY, query);
 		if (startPage > 0)
 			params.put(PARAM_START_PAGE, Integer.toString(startPage));
 		if (!params.isEmpty())
 			request.setParams(params);
 
-		request.setUri(uri);
+		request.setUri(SEGMENT_SEARCH + SEGMENT_REPOSITORIES);
 		request.setType(RepositoryContainer.class);
 		return getAll(request);
 	}
@@ -562,32 +525,38 @@ public class RepositoryService extends GitHubService {
 	 * @return list of repositories
 	 * @throws IOException
 	 */
-	public List<SearchRepository> searchRepositories(
+	public List<Repository> searchRepositories(final String query,
 			final Map<String, String> params) throws IOException {
-		return searchRepositories(params, -1);
+		return searchRepositories(query, params, -1);
 	}
 
 	/**
 	 * Search for repositories matching search parameters.
 	 *
+	 * @param query
 	 * @param queryParams
 	 * @param startPage
 	 * @return list of repositories
 	 * @throws IOException
 	 */
-	public List<SearchRepository> searchRepositories(
+	public List<Repository> searchRepositories(final String query,
 			final Map<String, String> queryParams, final int startPage)
 			throws IOException {
+		if (query == null)
+			throw new IllegalArgumentException("Query cannot be null"); //$NON-NLS-1$
+		if (query.length() == 0)
+			throw new IllegalArgumentException("Query cannot be empty"); //$NON-NLS-1$
 		if (queryParams == null)
 			throw new IllegalArgumentException("Params cannot be null"); //$NON-NLS-1$
 		if (queryParams.isEmpty())
 			throw new IllegalArgumentException("Params cannot be empty"); //$NON-NLS-1$
 
-		StringBuilder query = new StringBuilder();
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append(query).append(' ');
 		for (Entry<String, String> param : queryParams.entrySet())
-			query.append(param.getKey()).append(':').append(param.getValue())
+			queryBuilder.append(param.getKey()).append(':').append(param.getValue())
 					.append(' ');
-		return searchRepositories(query.toString(), startPage);
+		return searchRepositories(queryBuilder.toString(), startPage);
 	}
 
 	/**

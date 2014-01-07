@@ -64,6 +64,8 @@ public interface IGitHubConstants {
 	/** */
 	String PARAM_PER_PAGE = "per_page"; //$NON-NLS-1$
 	/** */
+	String PARAM_QUERY = "q"; //$NON-NLS-1$
+	/** */
 	String PARAM_START_PAGE = "start_page"; //$NON-NLS-1$
 
 	/** */
