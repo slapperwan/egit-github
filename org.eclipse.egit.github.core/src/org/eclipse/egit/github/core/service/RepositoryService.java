@@ -20,6 +20,7 @@ import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_FORKS
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_HOOKS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_LANGUAGES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_ORGS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_RELEASES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOSITORIES;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SEARCH;
@@ -42,6 +43,7 @@ import java.util.Map.Entry;
 import org.eclipse.egit.github.core.Contributor;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.IResourceProvider;
+import org.eclipse.egit.github.core.Release;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryHook;
@@ -872,6 +874,26 @@ public class RepositoryService extends GitHubService {
 		if (includeAnonymous)
 			request.setParams(Collections.singletonMap("anon", "1")); //$NON-NLS-1$ //$NON-NLS-2$
 		request.setType(new TypeToken<List<Contributor>>() {
+		}.getType());
+		return getAll(request);
+	}
+
+	/**
+	 * Get releases in given repository
+	 *
+	 * @param repository
+	 * @return list of releases
+	 * @throws IOException
+	 */
+	public List<Release> getReleases(IRepositoryIdProvider repository)
+			throws IOException {
+		String id = getId(repository);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
+		uri.append('/').append(id);
+		uri.append(SEGMENT_RELEASES);
+		PagedRequest<Release> request = createPagedRequest();
+		request.setUri(uri);
+		request.setType(new TypeToken<List<Release>>() {
 		}.getType());
 		return getAll(request);
 	}

@@ -153,6 +153,8 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_REFS = "/refs"; //$NON-NLS-1$
 	/** */
+	String SEGMENT_RELEASES = "/releases"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_REPOS = "/repos"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_REPOSITORIES = "/repositories"; //$NON-NLS-1$
