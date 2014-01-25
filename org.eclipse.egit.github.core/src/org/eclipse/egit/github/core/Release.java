@@ -40,6 +40,8 @@ public class Release implements Serializable {
 
 	private Date publishedAt;
 
+	private User author;
+
 	private List<Download> assets;
 
 	/**
@@ -88,6 +90,22 @@ public class Release implements Serializable {
 	public Release setName(String name) {
 		this.name = name;
 		return this;
+	}
+
+	/**
+	 * @return author
+	 */
+	public User getAuthor() {
+		return author;
+	}
+
+	/**
+	 * @param author
+	 * @return this release
+	 */
+	public Release setAuthor(User author) {
+	    this.author = author;
+	    return this;
 	}
 
 	/**
