@@ -81,6 +81,13 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 	public PageIterator(PagedRequest<V> request, GitHubClient client) {
 		this.request = request;
 		this.client = client;
+		reset();
+	}
+
+	/**
+	 * Reset iterator to restart at first page
+	 */
+	public void reset() {
 		next = request.getUri();
 		nextPage = parsePageNumber(next);
 	}
