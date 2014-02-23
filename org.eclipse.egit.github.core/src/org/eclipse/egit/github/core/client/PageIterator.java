@@ -72,6 +72,11 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 	 */
 	protected String last;
 
+        /**
+         * Uri of the original request (first page)
+         */
+        private String requestUri;
+
 	/**
 	 * Create page iterator
 	 *
@@ -81,6 +86,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 	public PageIterator(PagedRequest<V> request, GitHubClient client) {
 		this.request = request;
 		this.client = client;
+		this.requestUri = request.getUri();
 		reset();
 	}
 
@@ -88,7 +94,7 @@ public class PageIterator<V> implements Iterator<Collection<V>>,
 	 * Reset iterator to restart at first page
 	 */
 	public void reset() {
-		next = request.getUri();
+		next = requestUri;
 		nextPage = parsePageNumber(next);
 	}
 
