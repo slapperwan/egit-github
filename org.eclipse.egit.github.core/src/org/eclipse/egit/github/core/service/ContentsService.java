@@ -94,6 +94,19 @@ public class ContentsService extends GitHubService {
 	 */
 	public String getReadmeHtml(IRepositoryIdProvider repository)
 			throws IOException {
+		return getReadmeHtml(repository, null);
+	}
+
+	/**
+	 * Get HTML for the repository's README
+	 *
+	 * @param repository
+	 * @param ref
+	 * @return HTML
+	 * @throws IOException
+	 */
+	public String getReadmeHtml(IRepositoryIdProvider repository,
+			String ref) throws IOException {
 		String id = getId(repository);
 
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
@@ -102,6 +115,9 @@ public class ContentsService extends GitHubService {
 
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
+		if (ref != null && ref.length() > 0)
+			request.setParams(Collections.singletonMap("ref", ref));
+
 		return client.getStreamContents(request);
 	}
 
