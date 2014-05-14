@@ -10,6 +10,8 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.util;
 
+import org.eclipse.egit.github.core.okhttp.OkHttpProvider;
+
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 
 import java.io.BufferedOutputStream;
@@ -35,8 +37,7 @@ public class MultiPartUtils {
 	 */
 	public static HttpURLConnection post(String url, Map<String, Object> parts)
 			throws IOException {
-		HttpURLConnection post = (HttpURLConnection) new URL(url)
-				.openConnection();
+		HttpURLConnection post = OkHttpProvider.getOkHttpClient().open(new URL(url));
 		post.setRequestMethod("POST"); //$NON-NLS-1$
 		return post(post, parts);
 	}

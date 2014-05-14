@@ -46,6 +46,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.eclipse.egit.github.core.RequestError;
+import org.eclipse.egit.github.core.okhttp.OkHttpProvider;
 import org.eclipse.egit.github.core.util.EncodingUtils;
 
 /**
@@ -254,7 +255,7 @@ public class GitHubClient {
 	 */
 	protected HttpURLConnection createConnection(String uri) throws IOException {
 		URL url = new URL(createUri(uri));
-		return (HttpURLConnection) url.openConnection();
+        return OkHttpProvider.getOkHttpClient().open(url);
 	}
 
 	/**
