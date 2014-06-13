@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.Date;
 
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.event.Event;
 
 /**
@@ -50,7 +51,8 @@ public abstract class GsonUtils {
 	public static final Gson createGson(final boolean serializeNulls) {
 		final GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(Date.class, new DateFormatter());
-		builder.registerTypeAdapter(Event.class, new EventFormatter());
+	    builder.registerTypeAdapter(Event.class, new EventFormatter());
+        builder.registerTypeAdapter(CommitComment.class, new CommitCommentFormatter());
 		builder.setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES);
 		if (serializeNulls)
 			builder.serializeNulls();
