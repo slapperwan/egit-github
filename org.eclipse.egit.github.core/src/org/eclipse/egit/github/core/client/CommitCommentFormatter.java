@@ -25,7 +25,6 @@ public class CommitCommentFormatter implements JsonDeserializer<CommitComment> {
         final CommitComment commitComment = gson.fromJson(json, CommitComment.class);
         if (commitComment != null) {
             JsonElement position = json.getAsJsonObject().get("position");
-            System.out.println("++++++++++++ " + position);
             if (position == null || position.isJsonNull()) {
                 commitComment.setPosition( -1 );
             }

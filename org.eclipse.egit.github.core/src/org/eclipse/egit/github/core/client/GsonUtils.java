@@ -51,8 +51,8 @@ public abstract class GsonUtils {
 	public static final Gson createGson(final boolean serializeNulls) {
 		final GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(Date.class, new DateFormatter());
-	    builder.registerTypeAdapter(Event.class, new EventFormatter());
-        builder.registerTypeAdapter(CommitComment.class, new CommitCommentFormatter());
+		builder.registerTypeAdapter(Event.class, new EventFormatter());
+		builder.registerTypeAdapter(CommitComment.class, new CommitCommentFormatter());
 		builder.setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES);
 		if (serializeNulls)
 			builder.serializeNulls();
