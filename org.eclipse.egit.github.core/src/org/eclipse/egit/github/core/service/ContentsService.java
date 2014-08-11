@@ -10,6 +10,7 @@
  *****************************************************************************/
 package org.eclipse.egit.github.core.service;
 
+import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_CONTENTS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_README;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
@@ -18,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 
@@ -168,9 +170,12 @@ public class ContentsService extends GitHubService {
 		uri.append('/').append(id);
 		uri.append(SEGMENT_CONTENTS);
 		if (path != null && path.length() > 0) {
+			final String encodedPath = URLEncoder.encode(path, CHARSET_UTF8)
+				.replace("+", "%20") //$NON-NLS-1$ //$NON-NLS-2$
+				.replace(".", "%2E"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (path.charAt(0) != '/')
 				uri.append('/');
-			uri.append(path);
+			uri.append(encodedPath);
 		}
 		GitHubRequest request = createRequest();
 		request.setUri(uri);
