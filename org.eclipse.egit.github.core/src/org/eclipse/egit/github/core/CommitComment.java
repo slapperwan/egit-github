@@ -20,7 +20,7 @@ public class CommitComment extends Comment {
 
 	private int line;
 
-	private int position;
+	private int position = -1;
 
 	private String commitId;
 
