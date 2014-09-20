@@ -13,6 +13,7 @@ package org.eclipse.egit.github.core.event;
 import java.io.Serializable;
 
 import org.eclipse.egit.github.core.CommitComment;
+import org.eclipse.egit.github.core.PullRequest;
 
 /**
  * Payload for an event with type {@link Event#TYPE_PULL_REQUEST_REVIEW_COMMENT}
@@ -23,6 +24,8 @@ public class PullRequestReviewCommentPayload extends EventPayload implements
 	private static final long serialVersionUID = -2403658752886394741L;
 
 	private CommitComment comment;
+
+    private PullRequest pullRequest;
 
 	/**
 	 * @return comment
@@ -39,4 +42,18 @@ public class PullRequestReviewCommentPayload extends EventPayload implements
 		this.comment = comment;
 		return this;
 	}
+
+    /**
+     * @return pullRequest
+     */
+    public PullRequest getPullRequest() { return pullRequest; }
+
+    /**
+     * @param pullRequest
+     * @return this payload
+     */
+    public PullRequestReviewCommentPayload setPullRequest(PullRequest pullRequest) {
+        this.pullRequest = pullRequest;
+        return this;
+    }
 }
