@@ -19,43 +19,43 @@ import org.eclipse.egit.github.core.PullRequest;
  * Payload for an event with type {@link Event#TYPE_PULL_REQUEST_REVIEW_COMMENT}
  */
 public class PullRequestReviewCommentPayload extends EventPayload implements
-        Serializable {
+		Serializable {
 
-    private static final long serialVersionUID = -2403658752886394741L;
+	private static final long serialVersionUID = -2403658752886394741L;
 
-    private CommitComment comment;
+	private CommitComment comment;
 
-    private PullRequest pullRequest;
+	private PullRequest pullRequest;
 
-    /**
-     * @return comment
-     */
-    public CommitComment getComment() {
-        return comment;
-    }
+	/**
+	 * @return comment
+	 */
+	public CommitComment getComment() {
+		return comment;
+	}
 
-    /**
-     * @param comment
-     * @return this payload
-     */
-    public PullRequestReviewCommentPayload setComment(CommitComment comment) {
-        this.comment = comment;
-        return this;
-    }
+	/**
+	 * @param comment
+	 * @return this payload
+	 */
+	public PullRequestReviewCommentPayload setComment(CommitComment comment) {
+		this.comment = comment;
+		return this;
+	}
 
-    /**
-     * @return pullRequest
-     */
-    public PullRequest getPullRequest() {
-        return pullRequest;
-    }
+	/**
+	 * @return pullRequest
+	 */
+	public PullRequest getPullRequest() {
+		return pullRequest;
+	}
 
-    /**
-     * @param pullRequest
-     * @return this payload
-     */
-    public PullRequestReviewCommentPayload setPullRequest(PullRequest pullRequest) {
-        this.pullRequest = pullRequest;
-        return this;
-    }
+	/**
+	 * @param pullRequest
+	 * @return this payload
+	 */
+	public PullRequestReviewCommentPayload setPullRequest(PullRequest pullRequest) {
+		this.pullRequest = pullRequest;
+		return this;
+	}
 }
