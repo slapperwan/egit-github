@@ -35,7 +35,7 @@ public class SearchUser implements Serializable {
 	 */
 	public static final String TYPE_ORG = "organization"; //$NON-NLS-1$
 
-	private String id;
+	private int id;
 	private String gravatarId;
 	private String login;
 	private String name;
@@ -73,7 +73,7 @@ public class SearchUser implements Serializable {
 	/**
 	 * @return id
 	 */
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
