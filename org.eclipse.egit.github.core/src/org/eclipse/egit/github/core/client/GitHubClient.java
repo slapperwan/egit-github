@@ -44,6 +44,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.eclipse.egit.github.core.RequestError;
 import org.eclipse.egit.github.core.okhttp.OkHttpProvider;
@@ -81,9 +83,19 @@ public class GitHubClient {
 	protected static final String HEADER_CONTENT_TYPE = "Content-Type"; //$NON-NLS-1$
 
 	/**
+	 * Content-Encoding header
+	 */
+	protected static final String HEADER_CONTENT_ENCODING = "Content-Encoding"; //$NON-NLS-1$
+
+	/**
 	 * Accept header
 	 */
 	protected static final String HEADER_ACCEPT = "Accept"; //$NON-NLS-1$
+
+	/**
+	 * Accept-Encoding header
+	 */
+	protected static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding"; //$NON-NLS-1$
 
 	/**
 	 * Authorization header
@@ -230,6 +242,7 @@ public class GitHubClient {
 		request.setRequestProperty(HEADER_USER_AGENT, userAgent);
 		request.setRequestProperty(HEADER_ACCEPT,
 				"application/vnd.github.beta+json"); //$NON-NLS-1$
+		request.setRequestProperty(HEADER_ACCEPT_ENCODING, "gzip;q=1.0, deflate;q=0.5");
 		return request;
 	}
 
@@ -737,9 +750,16 @@ public class GitHubClient {
 	 */
 	protected InputStream getStream(HttpURLConnection request)
 			throws IOException {
-		if (request.getResponseCode() < HTTP_BAD_REQUEST)
+		if (request.getResponseCode() < HTTP_BAD_REQUEST) {
+			List<String> encodingHeaders =
+					request.getHeaderFields().get(HEADER_CONTENT_ENCODING);
+			if (encodingHeaders != null
+					&& !encodingHeaders.isEmpty()
+					&& "gzip".equals(encodingHeaders.get(0))) {
+				return new GZIPInputStream(request.getInputStream());
+			}
 			return request.getInputStream();
-		else {
+		} else {
 			InputStream stream = request.getErrorStream();
 			return stream != null ? stream : request.getInputStream();
 		}
