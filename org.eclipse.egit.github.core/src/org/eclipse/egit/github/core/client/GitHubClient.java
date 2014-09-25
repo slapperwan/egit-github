@@ -44,8 +44,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.InflaterInputStream;
 
 import org.eclipse.egit.github.core.RequestError;
 import org.eclipse.egit.github.core.okhttp.OkHttpProvider;
@@ -750,19 +750,19 @@ public class GitHubClient {
 	 */
 	protected InputStream getStream(HttpURLConnection request)
 			throws IOException {
-		if (request.getResponseCode() < HTTP_BAD_REQUEST) {
-			List<String> encodingHeaders =
-					request.getHeaderFields().get(HEADER_CONTENT_ENCODING);
-			if (encodingHeaders != null
-					&& !encodingHeaders.isEmpty()
-					&& "gzip".equals(encodingHeaders.get(0))) {
-				return new GZIPInputStream(request.getInputStream());
-			}
-			return request.getInputStream();
-		} else {
-			InputStream stream = request.getErrorStream();
-			return stream != null ? stream : request.getInputStream();
-		}
+		InputStream stream = null;
+		if (request.getResponseCode() >= HTTP_BAD_REQUEST)
+			stream = request.getErrorStream();
+		if (stream == null)
+			stream = request.getInputStream();
+
+		String encoding = request.getHeaderField(HEADER_CONTENT_ENCODING);
+		if ("gzip".equals(encoding))
+			return new GZIPInputStream(stream);
+		else if ("deflate".equals(encoding))
+			return new InflaterInputStream(stream);
+		else
+			return stream;
 	}
 
 	/**
