@@ -13,8 +13,9 @@ package org.eclipse.egit.github.core.service;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_REPOS;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USERS;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_WATCHED;
-import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_WATCHERS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SUBSCRIBERS;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SUBSCRIPTION;
+import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_SUBSCRIPTIONS;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_FIRST;
 import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 
@@ -68,7 +69,7 @@ public class WatcherService extends GitHubService {
 		PagedRequest<User> request = createPagedRequest(start, size);
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
-		uri.append(SEGMENT_WATCHERS);
+		uri.append(SEGMENT_SUBSCRIBERS);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<User>>() {
 		}.getType());
@@ -144,7 +145,7 @@ public class WatcherService extends GitHubService {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
 		StringBuilder uri = new StringBuilder(SEGMENT_USERS);
 		uri.append('/').append(user);
-		uri.append(SEGMENT_WATCHED);
+		uri.append(SEGMENT_SUBSCRIPTIONS);
 		request.setUri(uri);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
@@ -160,7 +161,7 @@ public class WatcherService extends GitHubService {
 	 */
 	protected PagedRequest<Repository> createWatchedRequest(int start, int size) {
 		PagedRequest<Repository> request = createPagedRequest(start, size);
-		request.setUri(SEGMENT_USER + SEGMENT_WATCHED);
+		request.setUri(SEGMENT_USER + SEGMENT_SUBSCRIPTIONS);
 		request.setType(new TypeToken<List<Repository>>() {
 		}.getType());
 		return request;
@@ -273,9 +274,9 @@ public class WatcherService extends GitHubService {
 	public boolean isWatching(IRepositoryIdProvider repository)
 			throws IOException {
 		String id = getId(repository);
-		StringBuilder uri = new StringBuilder(SEGMENT_USER);
-		uri.append(SEGMENT_WATCHED);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
+		uri.append(SEGMENT_SUBSCRIPTION);
 		return check(uri.toString());
 	}
 
@@ -287,9 +288,9 @@ public class WatcherService extends GitHubService {
 	 */
 	public void watch(IRepositoryIdProvider repository) throws IOException {
 		String id = getId(repository);
-		StringBuilder uri = new StringBuilder(SEGMENT_USER);
-		uri.append(SEGMENT_WATCHED);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
+		uri.append(SEGMENT_SUBSCRIPTION);
 		client.put(uri.toString());
 	}
 
@@ -301,9 +302,9 @@ public class WatcherService extends GitHubService {
 	 */
 	public void unwatch(IRepositoryIdProvider repository) throws IOException {
 		String id = getId(repository);
-		StringBuilder uri = new StringBuilder(SEGMENT_USER);
-		uri.append(SEGMENT_WATCHED);
+		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
+		uri.append(SEGMENT_SUBSCRIPTION);
 		client.delete(uri.toString());
 	}
 }

@@ -163,6 +163,12 @@ public interface IGitHubConstants {
 	/** */
 	String SEGMENT_SHOW = "/show"; //$NON-NLS-1$
 	/** */
+	String SEGMENT_SUBSCRIBERS = "/subscribers"; //$NON-NLS-1$
+	/** */
+	String SEGMENT_SUBSCRIPTION = "/subscription"; //$NON-NLS-1$
+	/** */
+	String SEGMENT_SUBSCRIPTIONS = "/subscriptions"; //$NON-NLS-1$
+	/** */
 	String SEGMENT_STAR = "/star"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_STARGAZERS = "/stargazers"; //$NON-NLS-1$
@@ -182,10 +188,6 @@ public interface IGitHubConstants {
 	String SEGMENT_USER = "/user"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_USERS = "/users"; //$NON-NLS-1$
-	/** */
-	String SEGMENT_WATCHED = "/watched"; //$NON-NLS-1$
-	/** */
-	String SEGMENT_WATCHERS = "/watchers"; //$NON-NLS-1$
 	/** */
 	String SEGMENT_V3_API = "/api/v3"; //$NON-NLS-1$
 
