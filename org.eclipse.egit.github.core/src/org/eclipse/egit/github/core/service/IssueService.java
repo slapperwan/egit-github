@@ -1013,6 +1013,19 @@ public class IssueService extends GitHubService {
 	}
 
 	/**
+	 * Get all events for issue in repository
+	 *
+	 * @param user
+	 * @param repository
+	 * @param issueId
+	 * @return list of issue events
+	 */
+	public List<IssueEvent> getIssueEvents(String user,
+			String repository, int issueId) throws IOException {
+		return getAll(pageIssueEvents(user, repository, issueId));
+	}
+
+	/**
 	 * Page events for issue in repository
 	 *
 	 * @param user
