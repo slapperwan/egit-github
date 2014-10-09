@@ -37,6 +37,12 @@ public class IssueEvent implements Serializable {
 
 	private User actor;
 
+	private User assignee;
+
+	private Label label;
+
+	private Milestone milestone;
+
 	/**
 	 * @return createdAt
 	 */
@@ -146,6 +152,54 @@ public class IssueEvent implements Serializable {
 	 */
 	public IssueEvent setActor(User actor) {
 		this.actor = actor;
+		return this;
+	}
+
+	/**
+	 * @return assignee
+	 */
+	public User getAssignee() {
+		return actor;
+	}
+
+	/**
+	 * @param assignee
+	 * @return this issue event
+	 */
+	public IssueEvent setAssignee(User assignee) {
+		this.assignee = assignee;
+		return this;
+	}
+
+	/**
+	 * @return label
+	 */
+	public Label getLabel() {
+		return label;
+	}
+
+	/**
+	 * @param label
+	 * @return this issue event
+	 */
+	public IssueEvent setLabel(Label label) {
+		this.label = label;
+		return this;
+	}
+
+	/**
+	 * @return milestone
+	 */
+	public Milestone getMilestone() {
+		return milestone;
+	}
+
+	/**
+	 * @param milestone
+	 * @return this issue event
+	 */
+	public IssueEvent setMilestone(Milestone milestone) {
+		this.milestone = milestone;
 		return this;
 	}
 }
