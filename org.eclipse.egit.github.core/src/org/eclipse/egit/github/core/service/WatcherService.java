@@ -22,7 +22,9 @@ import static org.eclipse.egit.github.core.client.PagedRequest.PAGE_SIZE;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.Repository;
@@ -38,6 +40,11 @@ import org.eclipse.egit.github.core.client.PagedRequest;
  *      API documentation</a>
  */
 public class WatcherService extends GitHubService {
+
+	/**
+	 * Subscription status field name
+	 */
+	public static final String FIELD_SUBSCRIBED = "subscribed"; //$NON-NLS-1$
 
 	/**
 	 * Create watcher service
@@ -291,7 +298,11 @@ public class WatcherService extends GitHubService {
 		StringBuilder uri = new StringBuilder(SEGMENT_REPOS);
 		uri.append('/').append(id);
 		uri.append(SEGMENT_SUBSCRIPTION);
-		client.put(uri.toString());
+
+		Map<String, String> params = new HashMap<String, String>(1, 1);
+		params.put(FIELD_SUBSCRIBED, "true");
+
+		client.put(uri.toString(), params, null);
 	}
 
 	/**
