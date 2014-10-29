@@ -27,7 +27,7 @@ public class TeamAddPayload extends EventPayload implements Serializable {
 
 	private User user;
 
-	private Repository repo;
+	private Repository repository;
 
 	/**
 	 * @return team
@@ -65,7 +65,7 @@ public class TeamAddPayload extends EventPayload implements Serializable {
 	 * @return repo
 	 */
 	public Repository getRepo() {
-		return repo;
+		return repository;
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class TeamAddPayload extends EventPayload implements Serializable {
 	 * @return this TeamAddPayload
 	 */
 	public TeamAddPayload setRepo(Repository repo) {
-		this.repo = repo;
+		this.repository = repo;
 		return this;
 	}
 }
